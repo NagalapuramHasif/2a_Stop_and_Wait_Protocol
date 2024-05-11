@@ -12,42 +12,35 @@ To write a python program to perform stop and wait protocol
 6. Stop the Program
 
 ## PROGRAM:
-### CLIENT:
 ```python
-import socket
-s=socket.socket()
-s.bind(('localhost',8000))
-s.listen(5)
-c,addr=s.accept()
-while True:
-    i=input("Enter a data: ")
-    c.send(i.encode())
-    ack=c.recv(1024).decode()
-    if ack:
-        print(ack)
-        continue
-    else:
-        c.close()
-        break
-```
-### SERVER:
-```python
-import socket
-s=socket.socket()
-s.connect(('localhost',8000))
-while True:
-    print(s.recv(1024).decode())
-    s.send("Acknowledgement Recived".encode())
+import time
+
+def send_frame(frame):
+    print("Sending frame:",frame)
+    time.sleep(1)
+    ack_received=False
+    while not ack_received:
+        ack=input("Enter ACK (1 for success, 0 failure):")
+        if ack=='1':
+            print("ACK received from frame:",frame)
+            ack_received=True
+        else:
+            print("NACK received from frame:",frame)
+            print("Resending frame:",frame)
+            time.sleep(1)
+
+def main():
+    frame_size=int(input("Enter frame size:"))
+    frames=[i for i in range(frame_size)]
+    for frame in frames:
+        send_frame(frame)
+    print("All frames sent successfully.")
+if __name__=="__main__":
+    main()
 ```
 ## OUTPUT
 
-### CLIENT:
-
-![alt text](<Screenshot 2024-05-09 200206.png>)
-
-### SERVER:
-
-![alt text](<Screenshot 2024-05-09 200226.png>)
+![alt text](image.png)
 
 ## RESULT
 Thus, python program to perform stop and wait protocol was successfully executed.
